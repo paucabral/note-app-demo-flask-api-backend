@@ -122,7 +122,7 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
         # Delete the created note with the access token
         headers = {'Authorization': f'Bearer {access_token}'}
-        delete_response = self.app.delete(f'/api/notes/{note_id}', headers=headers)
+        delete_response = self.app.delete(f'/api/notes/{note_id}/delete', headers=headers)
         self.assertEqual(delete_response.status_code, 200)
 
 if __name__ == '__main__':

@@ -146,7 +146,7 @@ def update_note(note_id):
         }
         return jsonify(response), 400
 
-@app.route('/api/notes/<int:note_id>', methods=['DELETE'])
+@app.route('/api/notes/<int:note_id>/delete', methods=['DELETE'])
 @jwt_required()
 def delete_note(note_id):
     try:
