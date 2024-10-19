@@ -1,9 +1,9 @@
 
 from flask import Flask, request, jsonify
-from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt, get_jwt_identity, create_access_token, create_refresh_token
 from flask_migrate import Migrate
 
-from models import db, User, Note
+from models import db, User, Note, TokenBlockList
 from schemas import ma, note_schema, notes_schema
 
 app = Flask(__name__)
@@ -18,56 +18,117 @@ jwt = JWTManager(app)
 # Register
 @app.route('/api/register', methods=['POST'])
 def register():
-    username = request.json.get('username')
-    password = request.json.get('password')
+    try:
+        username = request.json.get('username')
+        password = request.json.get('password')
 
-    if not username or not password:
+        if not username or not password:
+            response = {
+                "error": "Invalid username or password"
+            }
+
+            return jsonify(response), 400
+
+        existing_user = User.query.filter_by(username=username).first()
+
+        if existing_user:
+            response = {
+                "error": "Username already exists"
+            }
+
+            return jsonify(response), 400
+
+        user = User(username=username)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+
         response = {
-            "error": "Invalid username or password"
+            "message": "User registered successfully."
         }
 
-        return jsonify(response), 400
-
-    existing_user = User.query.filter_by(username=username).first()
-
-    if existing_user:
+        return jsonify(response), 201
+    except:
         response = {
-            "error": "Username already exists"
+            "error": "Invalid data."
         }
-
         return jsonify(response), 400
-
-    user = User(username=username)
-    user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
-
-    response = {
-        "message": "User registered successfully."
-    }
-
-    return jsonify(response), 201
 
 # Login
 @app.route('/api/login', methods=['POST'])
 def login():
-    username = request.json.get('username')
-    password = request.json.get('password')
+    try:
+        username = request.json.get('username')
+        password = request.json.get('password')
 
-    user = User.query.filter_by(username=username).first()
-    if not user or not user.check_password(password):
+        user = User.query.filter_by(username=username).first()
+        if not user or not user.check_password(password):
+            response = {
+                "error": "Invalid username or password"
+            }
+
+            return jsonify(response), 401
+        
+        access_token = create_access_token(identity=user.id)
+        refresh_token = create_refresh_token(identity=user.id)
         response = {
-            "error": "Invalid username or password"
+            "access_token": access_token,
+            "refresh_token": refresh_token
         }
 
-        return jsonify(response), 401
+        return jsonify(response), 200
+    except:
+        response = {
+            "error": "Invalid data."
+        }
+        return jsonify(response), 400
     
-    access_token = create_access_token(identity=user.id)
-    response = {
-        "access_token": access_token
-    }
+# Refresh Access Token
+@app.route('/api/refresh-token', methods=["GET"])
+@jwt_required(refresh=True)
+def refresh_token():
+    try:
+        user_id = get_jwt_identity()
+        new_access_token = create_access_token(identity=user_id)
+        response = {
+            "access_token": new_access_token
+        }
 
-    return jsonify(response), 200
+        return jsonify(response), 200
+    except:
+        response = {
+            "error": "Invalid data."
+        }
+        return jsonify(response), 400
+
+# Logout
+@jwt.token_in_blocklist_loader
+def check_if_token_is_revoked(jwt_header,jwt_data):
+    jti = jwt_data['jti']
+    token = db.session.query(TokenBlockList).filter(TokenBlockList.jti==jti).scalar()
+    return token is not None
+
+@app.route('/api/logout', methods=['GET'])
+@jwt_required()
+def logout():
+    try:
+        jwt = get_jwt()
+        jti = jwt['jti']
+
+        token = TokenBlockList(jti=jti)
+        db.session.add(token)
+        db.session.commit()
+
+        response = {
+            "message": "Logged out succesfully."
+        }
+        return jsonify(response), 200
+    
+    except:
+        response = {
+            "error": "Invalid operation."
+        }
+        return jsonify(response), 400
 
 # Create a new note
 @app.route('/api/notes', methods=['POST'])

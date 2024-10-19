@@ -43,11 +43,27 @@ class TestIntegration:
         response = self.client.post(
             "/api/login",
             json={'username': username, 'password': password},
-            follow_redirects=True
         )
         assert response.status_code == 200
         data = response.get_json()
         return data['access_token']
+
+    def logout(self, token):
+        response = self.client.get(
+            "/api/logout",
+            headers={'Authorization': f'Bearer {token}'}
+        )
+        assert response.status_code == 200
+        data = response.get_json()
+        return data['message']
+    
+    def test_login_logout(self):
+        """Test the login and logout process"""
+        self.register(os.getenv("TEST_USER"), os.getenv("TEST_PASSWORD"))
+        token = self.login(os.getenv("TEST_USER"), os.getenv("TEST_PASSWORD"))
+        assert token is not None
+
+        self.logout(token)
 
     def test_register_login(self):
         """Test the registration and login process, and token retrieval"""
