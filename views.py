@@ -5,9 +5,11 @@ from flask_migrate import Migrate
 
 from models import db, User, Note, TokenBlockList
 from schemas import ma, note_schema, notes_schema
+from docs import swagger_ui_blueprint, SWAGGER_URL
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
+app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
 db.init_app(app)
 ma.init_app(app)
@@ -84,7 +86,7 @@ def login():
         return jsonify(response), 400
     
 # Refresh Access Token
-@app.route('/api/refresh-token', methods=["GET"])
+@app.route('/api/refresh-token', methods=["POST"])
 @jwt_required(refresh=True)
 def refresh_token():
     try:
