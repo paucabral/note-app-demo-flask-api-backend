@@ -55,3 +55,5 @@ A demo of an API Server using Flask.
     ```bash
     (venv)$ FLASK_ENV=test pytest
     ```
+
+7. View API documentation at `/api/docs`.
