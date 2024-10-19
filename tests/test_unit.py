@@ -1,9 +1,23 @@
 import unittest
 from flask import json
+
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
+import sys
+
+# Append the project path to the system path
+current_dir = os.path.dirname(__file__)
+sys.path.append(os.path.join(current_dir, ".."))
+
 from app import app
 from models import db
 
-class FlaskAppTestCase(unittest.TestCase):
+TEST_USER = os.getenv("TEST_USER")
+TEST_PASSWORD = os.getenv("TEST_PASSWORD")
+
+class NoteAppBackedTestCase(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         with app.app_context():
@@ -15,31 +29,31 @@ class FlaskAppTestCase(unittest.TestCase):
             db.drop_all()
    
     def register_user(self, username, password):
-        return self.app.post('/api/register', json={'username': username, 'password': password})
+        return self.app.post('/api/register', json={'username': TEST_USER, 'password': TEST_PASSWORD})
 
     def login_user(self, username, password):
-        return self.app.post('/api/login', json={'username': username, 'password': password})
+        return self.app.post('/api/login', json={'username': TEST_USER, 'password': TEST_PASSWORD})
 
     def create_note(self, title, content, access_token):
         headers = {'Authorization': f'Bearer {access_token}'}
         return self.app.post('/api/notes', json={'title': title, 'content': content}, headers=headers)
 
     def test_register_user(self):
-        response = self.register_user('testuser', 'testpassword')
+        response = self.register_user(TEST_USER, TEST_PASSWORD)
         self.assertEqual(response.status_code, 201)
 
     def test_login_user(self):
         # Register a user
-        self.register_user('testuser', 'testpassword')
+        self.register_user(TEST_USER, TEST_PASSWORD)
 
         # Login with the registered user
-        response = self.login_user('testuser', 'testpassword')
+        response = self.login_user(TEST_USER, TEST_PASSWORD)
         self.assertEqual(response.status_code, 200)
 
     def test_create_note(self):
         # Register a user and login
-        self.register_user('testuser', 'testpassword')
-        response = self.login_user('testuser', 'testpassword')
+        self.register_user(TEST_USER, TEST_PASSWORD)
+        response = self.login_user(TEST_USER, TEST_PASSWORD)
         self.assertEqual(response.status_code, 200)
         access_token = json.loads(response.get_data(as_text=True))['access_token']
 
@@ -49,8 +63,8 @@ class FlaskAppTestCase(unittest.TestCase):
 
     def test_get_notes(self):
         # Register a user and login
-        self.register_user('testuser', 'testpassword')
-        response = self.login_user('testuser', 'testpassword')
+        self.register_user(TEST_USER, TEST_PASSWORD)
+        response = self.login_user(TEST_USER, TEST_PASSWORD)
         self.assertEqual(response.status_code, 200)
         access_token = json.loads(response.get_data(as_text=True))['access_token']
 
@@ -65,8 +79,8 @@ class FlaskAppTestCase(unittest.TestCase):
 
     def test_get_note(self):
         # Register a user and login
-        self.register_user('testuser', 'testpassword')
-        response = self.login_user('testuser', 'testpassword')
+        self.register_user(TEST_USER, TEST_PASSWORD)
+        response = self.login_user(TEST_USER, TEST_PASSWORD)
         self.assertEqual(response.status_code, 200)
         access_token = json.loads(response.get_data(as_text=True))['access_token']
 
@@ -81,8 +95,8 @@ class FlaskAppTestCase(unittest.TestCase):
 
     def test_update_note(self):
         # Register a user and login
-        self.register_user('testuser', 'testpassword')
-        response = self.login_user('testuser', 'testpassword')
+        self.register_user(TEST_USER, TEST_PASSWORD)
+        response = self.login_user(TEST_USER, TEST_PASSWORD)
         self.assertEqual(response.status_code, 200)
         access_token = json.loads(response.get_data(as_text=True))['access_token']
 
@@ -97,8 +111,8 @@ class FlaskAppTestCase(unittest.TestCase):
 
     def test_delete_note(self):
         # Register a user and login
-        self.register_user('testuser', 'testpassword')
-        response = self.login_user('testuser', 'testpassword')
+        self.register_user(TEST_USER, TEST_PASSWORD)
+        response = self.login_user(TEST_USER, TEST_PASSWORD)
         self.assertEqual(response.status_code, 200)
         access_token = json.loads(response.get_data(as_text=True))['access_token']
 

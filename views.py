@@ -1,14 +1,19 @@
 
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token
+from flask_migrate import Migrate
 
 from models import db, User, Note
-from schemas import note_schema, notes_schema
+from schemas import ma, note_schema, notes_schema
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
-jwt = JWTManager(app)
+
 db.init_app(app)
+ma.init_app(app)
+migrate = Migrate(app, db)
+
+jwt = JWTManager(app)
 
 # Register
 @app.route('/api/register', methods=['POST'])
