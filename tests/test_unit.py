@@ -33,6 +33,9 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
     def login_user(self, username, password):
         return self.app.post('/api/login', json={'username': TEST_USER, 'password': TEST_PASSWORD})
+    
+    def logout_user(self, token):
+        return self.app.get("/api/logout", headers={'Authorization': f'Bearer {token}'})
 
     def create_note(self, title, content, access_token):
         headers = {'Authorization': f'Bearer {access_token}'}
@@ -48,6 +51,18 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
         # Login with the registered user
         response = self.login_user(TEST_USER, TEST_PASSWORD)
+        self.assertEqual(response.status_code, 200)
+    
+    def test_logout_user(self):
+        # Register a user
+        self.register_user(TEST_USER, TEST_PASSWORD)
+
+        # Login with the registered user
+        response = self.login_user(TEST_USER, TEST_PASSWORD)
+        self.assertEqual(response.status_code, 200)
+
+        # Logout with the logged in user
+        response = self.logout_user(json.loads(response.get_data(as_text=True))['access_token'])
         self.assertEqual(response.status_code, 200)
 
     def test_create_note(self):
