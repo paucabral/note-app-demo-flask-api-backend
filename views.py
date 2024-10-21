@@ -104,7 +104,7 @@ def refresh_token():
 
 # Logout
 @jwt.token_in_blocklist_loader
-def check_if_token_is_revoked(jwt_header,jwt_data):
+def check_if_token_is_revoked(_jwt_header, jwt_data):
     jti = jwt_data['jti']
     token = db.session.query(TokenBlockList).filter(TokenBlockList.jti==jti).scalar()
     return token is not None
@@ -171,11 +171,11 @@ def get_note(note_id):
         if note:
             response = note_schema.dump(note)
             return jsonify(response), 200
-        else:
-            response = {
-                "error": "Note not found"
-            }
-            return jsonify(response), 404
+
+        response = {
+            "error": "Note not found"
+        }
+        return jsonify(response), 404
     except (ValueError, TypeError):
         response = {
             "error": "Invalid note ID"
@@ -197,11 +197,11 @@ def update_note(note_id):
 
             response = note_schema.dump(note)
             return jsonify(response), 200
-        else:
-            response = {
-                "error": "Note not found"
-            }
-            return jsonify(response), 404
+
+        response = {
+            "error": "Note not found"
+        }
+        return jsonify(response), 404
     except (ValueError, TypeError):
         response = {
             "error": "Invalid data"
@@ -221,11 +221,11 @@ def delete_note(note_id):
                 "message": "Note deleted"
             }
             return jsonify(response), 200
-        else:
-            response = {
-                "error": "Note not found"
-            }
-            return jsonify(response), 404
+
+        response = {
+            "error": "Note not found"
+        }
+        return jsonify(response), 404
     except (ValueError, TypeError):
         response = {
             "error": "Invalid note ID"
