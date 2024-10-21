@@ -7,7 +7,7 @@ if __name__ == "__main__":
         db.create_all()
         
     app.run(
-            debug=bool(os.getenv("DEBUG")),
-            port=int(os.getenv("PORT")),
+            debug=bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False,
+            port=int(os.getenv("PORT")) if os.getenv("PORT") else 5000,
             host="0.0.0.0"
             )

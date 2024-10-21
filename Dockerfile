@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Command to run the application
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["gunicorn", "app:app", "0.0.0.0:5000"]
