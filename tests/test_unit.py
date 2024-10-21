@@ -101,7 +101,7 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
         # Create a note with the logged-in user
         create_response = self.create_note('Test Note', 'This is a test note', access_token)
-        note_id = json.loads(create_response.get_data(as_text=True))['message'].split(":")[1].strip()
+        note_id = json.loads(create_response.get_data(as_text=True))['msg'].split(":")[1].strip()
 
         # Retrieve the created note with the access token
         headers = {'Authorization': f'Bearer {access_token}'}
@@ -117,7 +117,7 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
         # Create a note with the logged-in user
         create_response = self.create_note('Test Note', 'This is a test note', access_token)
-        note_id = json.loads(create_response.get_data(as_text=True))['message'].split(":")[1].strip()
+        note_id = json.loads(create_response.get_data(as_text=True))['msg'].split(":")[1].strip()
 
         # Update the created note with the access token
         headers = {'Authorization': f'Bearer {access_token}'}
@@ -133,7 +133,7 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
         # Create a note with the logged-in user
         create_response = self.create_note('Test Note', 'This is a test note', access_token)
-        note_id = json.loads(create_response.get_data(as_text=True))['message'].split(":")[1].strip()
+        note_id = json.loads(create_response.get_data(as_text=True))['msg'].split(":")[1].strip()
 
         # Delete the created note with the access token
         headers = {'Authorization': f'Bearer {access_token}'}

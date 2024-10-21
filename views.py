@@ -25,7 +25,7 @@ def register():
 
         if not username or not password:
             response = {
-                "error": "Invalid username or password"
+                "msg": "Invalid username or password"
             }
 
             return jsonify(response), 400
@@ -34,7 +34,7 @@ def register():
 
         if existing_user:
             response = {
-                "error": "Username already exists"
+                "msg": "Username already exists"
             }
 
             return jsonify(response), 400
@@ -45,13 +45,13 @@ def register():
         db.session.commit()
 
         response = {
-            "message": "User registered successfully."
+            "msg": "User registered successfully."
         }
 
         return jsonify(response), 201
     except:
         response = {
-            "error": "Invalid data."
+            "msg": "Invalid data."
         }
         return jsonify(response), 400
 
@@ -65,7 +65,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
             response = {
-                "error": "Invalid username or password"
+                "msg": "Invalid username or password"
             }
 
             return jsonify(response), 401
@@ -80,7 +80,7 @@ def login():
         return jsonify(response), 200
     except:
         response = {
-            "error": "Invalid data."
+            "msg": "Invalid data."
         }
         return jsonify(response), 400
     
@@ -98,7 +98,7 @@ def refresh_token():
         return jsonify(response), 200
     except:
         response = {
-            "error": "Invalid data."
+            "msg": "Invalid data."
         }
         return jsonify(response), 400
 
@@ -121,13 +121,13 @@ def logout():
         db.session.commit()
 
         response = {
-            "message": "Logged out succesfully."
+            "msg": "Logged out succesfully."
         }
         return jsonify(response), 200
     
     except:
         response = {
-            "error": "Invalid operation."
+            "msg": "Invalid operation."
         }
         return jsonify(response), 400
 
@@ -143,13 +143,13 @@ def create_note():
         db.session.commit()
         
         response = {
-            "message": f"Note added with id: {note.id}"
+            "msg": f"Note added with id: {note.id}"
         }
 
         return jsonify(response), 201
     except (KeyError, TypeError):
         response = {
-            "error": "Invalid Data"
+            "msg": "Invalid Data"
         }
         
         return jsonify(response), 400
@@ -173,12 +173,12 @@ def get_note(note_id):
             return jsonify(response), 200
 
         response = {
-            "error": "Note not found"
+            "msg": "Note not found"
         }
         return jsonify(response), 404
     except (ValueError, TypeError):
         response = {
-            "error": "Invalid note ID"
+            "msg": "Invalid note ID"
         }
 
         return jsonify(response), 400
@@ -199,12 +199,12 @@ def update_note(note_id):
             return jsonify(response), 200
 
         response = {
-            "error": "Note not found"
+            "msg": "Note not found"
         }
         return jsonify(response), 404
     except (ValueError, TypeError):
         response = {
-            "error": "Invalid data"
+            "msg": "Invalid data"
         }
         return jsonify(response), 400
 
@@ -218,16 +218,16 @@ def delete_note(note_id):
             db.session.delete(note)
             db.session.commit()
             response = {
-                "message": "Note deleted"
+                "msg": "Note deleted"
             }
             return jsonify(response), 200
 
         response = {
-            "error": "Note not found"
+            "msg": "Note not found"
         }
         return jsonify(response), 404
     except (ValueError, TypeError):
         response = {
-            "error": "Invalid note ID"
+            "msg": "Invalid note ID"
         }
         return jsonify(response), 400

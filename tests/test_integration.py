@@ -55,7 +55,7 @@ class TestIntegration:
         )
         assert response.status_code == 200
         data = response.get_json()
-        return data['message']
+        return data['msg']
     
     def test_login_logout(self):
         """Test the login and logout process"""
