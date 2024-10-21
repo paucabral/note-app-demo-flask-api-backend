@@ -1,18 +1,20 @@
-import unittest
-from flask import json
-
-from dotenv import load_dotenv
-load_dotenv()
-
 import os
 import sys
 
 # Append the project path to the system path
-current_dir = os.path.dirname(__file__)
+current_dir = os.path.dirname(__file__) 
 sys.path.append(os.path.join(current_dir, ".."))
 
-from app import app
-from models import db
+# pylint: disable=wrong-import-position
+import unittest
+from flask import json
+from dotenv import load_dotenv
+
+from app import app     # pylint: disable=import-error
+from models import db   # pylint: disable=import-error
+# pylint: enable=wrong-import-position
+
+load_dotenv()
 
 TEST_USER = os.getenv("TEST_USER")
 TEST_PASSWORD = os.getenv("TEST_PASSWORD")
@@ -29,10 +31,10 @@ class NoteAppBackedTestCase(unittest.TestCase):
             db.drop_all()
    
     def register_user(self, username, password):
-        return self.app.post('/api/register', json={'username': TEST_USER, 'password': TEST_PASSWORD})
+        return self.app.post('/api/register', json={'username': username, 'password': password})
 
     def login_user(self, username, password):
-        return self.app.post('/api/login', json={'username': TEST_USER, 'password': TEST_PASSWORD})
+        return self.app.post('/api/login', json={'username': username, 'password': password})
     
     def logout_user(self, token):
         return self.app.get("/api/logout", headers={'Authorization': f'Bearer {token}'})
@@ -101,7 +103,7 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
         # Create a note with the logged-in user
         create_response = self.create_note('Test Note', 'This is a test note', access_token)
-        note_id = json.loads(create_response.get_data(as_text=True))['message'].split(":")[1].strip()
+        note_id = json.loads(create_response.get_data(as_text=True))['msg'].split(":")[1].strip()
 
         # Retrieve the created note with the access token
         headers = {'Authorization': f'Bearer {access_token}'}
@@ -117,7 +119,7 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
         # Create a note with the logged-in user
         create_response = self.create_note('Test Note', 'This is a test note', access_token)
-        note_id = json.loads(create_response.get_data(as_text=True))['message'].split(":")[1].strip()
+        note_id = json.loads(create_response.get_data(as_text=True))['msg'].split(":")[1].strip()
 
         # Update the created note with the access token
         headers = {'Authorization': f'Bearer {access_token}'}
@@ -133,7 +135,7 @@ class NoteAppBackedTestCase(unittest.TestCase):
 
         # Create a note with the logged-in user
         create_response = self.create_note('Test Note', 'This is a test note', access_token)
-        note_id = json.loads(create_response.get_data(as_text=True))['message'].split(":")[1].strip()
+        note_id = json.loads(create_response.get_data(as_text=True))['msg'].split(":")[1].strip()
 
         # Delete the created note with the access token
         headers = {'Authorization': f'Bearer {access_token}'}

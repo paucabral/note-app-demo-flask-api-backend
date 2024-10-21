@@ -1,14 +1,16 @@
-import pytest
-from flask import url_for
 import os
 import sys
+
+import pytest
 
 # Append the project path to the system path
 current_dir = os.path.dirname(__file__)
 sys.path.append(os.path.join(current_dir, ".."))
 
-from app import app
-from models import db, User, Note
+# pylint: disable=wrong-import-position
+from app import app                 # pylint: disable=import-error
+from models import db, User, Note   # pylint: disable=import-error
+# pylint: enable=wrong-import-position
 
 class TestIntegration:
 
@@ -55,7 +57,7 @@ class TestIntegration:
         )
         assert response.status_code == 200
         data = response.get_json()
-        return data['message']
+        return data['msg']
     
     def test_login_logout(self):
         """Test the login and logout process"""
