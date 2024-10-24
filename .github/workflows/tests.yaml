@@ -5,6 +5,7 @@ on:
     workflows: [ "Lint Code Base" ]
     types:
       - completed
+  workflow_dispatch:
 
 permissions:
   contents: read
