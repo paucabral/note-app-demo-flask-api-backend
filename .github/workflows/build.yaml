@@ -24,4 +24,4 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag "note-app-demo-flask-api-backend-${GITHUB_REF}:$(date +%s)"
+        run: docker build . --file Dockerfile --tag "note-app-demo-flask-api-backend-${GITHUB_REF#refs/*/}:$(date +%s)"
