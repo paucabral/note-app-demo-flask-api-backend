@@ -8,10 +8,6 @@ on:
     branches-ignore:
       - "docs/**"
 
-permissions:
-  contents: read
-  actions: write
-
 jobs:
   run-lint:
     runs-on: ubuntu-latest
