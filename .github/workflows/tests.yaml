@@ -14,6 +14,7 @@ jobs:
   tests:
     environment: "testing"
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     steps:
       - name: Checkout code
@@ -32,7 +33,7 @@ jobs:
 
       - name: Test with pytest
         env:
-          FLASK_ENV: "testing"
+          FLASK_ENV: ${{ secrets.FLASK_ENV }}
           TEST_DB_URI: ${{ secrets.TEST_DB_URI }}
           TEST_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
           TEST_USER: ${{ secrets.TEST_USER }}
