@@ -13,7 +13,6 @@ on:
 
 jobs:
   build:
-    environment: ${{ github.ref_name }}
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
@@ -24,31 +23,16 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      - name: Build the Docker image for production environment
-        run: docker build . \
-              --build-arg FLASK_ENV=${{ secrets.FLASK_ENV }} \
-              --build-arg DEBUG=${{ secrets.DEBUG }} \
-              --build-arg PORT=${{ secrets.PORT }} \
-              --build-arg PROD_SECRET_KEY=${{ secrets.PROD_SECRET_KEY }} \
-              --build-arg PROD_DB_URI=${{ secrets.PROD_DB_URI }} \
-              --file Dockerfile \
-              --tag "note-app-demo-flask-api-backend-${GITHUB_REF#refs/*/}:$(date +%s)"
-        if: ${{ github.ref_name }} == "main"
-      
-      - name: Build the Docker image for staging environment
-        run: docker build . \
-              --build-arg FLASK_ENV=${{ secrets.FLASK_ENV }} \
-              --build-arg STG_SECRET_KEY=${{ secrets.STG_SECRET_KEY }} \
-              --build-arg STG_DB_URI=${{ secrets.STG_DB_URI }} \
-              --file Dockerfile \
-              --tag "note-app-demo-flask-api-backend-${GITHUB_REF#refs/*/}:$(date +%s)"
-        if: ${{ github.ref_name }} == "staging"
-      
-      - name: Build the Docker image for development environment
-        run: docker build . \
-              --build-arg FLASK_ENV=${{ secrets.FLASK_ENV }} \
-              --build-arg DEV_SECRET_KEY=${{ secrets.DEV_SECRET_KEY }} \
-              --build-arg DEV_DB_URI=${{ secrets.DEV_DB_URI }} \
-              --file Dockerfile \
-              --tag "note-app-demo-flask-api-backend-${GITHUB_REF#refs/*/}:$(date +%s)"
-        if: ${{ github.ref_name }} == "development"
+      - name: Build the Docker image
+        run: |
+          TAG="note-app-demo-flask-api-backend-${{ github.ref_name }}:$(date +%s)"
+          docker build . \
+            --build-arg FLASK_ENV=${{ secrets.FLASK_ENV }} \
+            --build-arg DEBUG=${{ secrets.DEBUG }} \
+            --file Dockerfile \
+            --tag $TAG \
+            ${{
+              github.ref_name == 'main' && '--build-arg PROD_SECRET_KEY=${{ secrets.PROD_SECRET_KEY }} --build-arg PROD_DB_URI=${{ secrets.PROD_DB_URI }}' ||
+              github.ref_name == 'staging' && '--build-arg STG_SECRET_KEY=${{ secrets.STG_SECRET_KEY }} --build-arg STG_DB_URI=${{ secrets.STG_DB_URI }}' ||
+              github.ref_name == 'development' && '--build-arg DEV_SECRET_KEY=${{ secrets.DEV_SECRET_KEY }} --build-arg DEV_DB_URI=${{ secrets.DEV_DB_URI }}'
+            }}
