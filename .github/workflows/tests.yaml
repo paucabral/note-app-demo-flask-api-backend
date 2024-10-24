@@ -1,12 +1,11 @@
 name: Run Tests
 
 on:
-  push:
-    branches-ignore:
-      - "docs/**"
-  pull_request:
-    branches-ignore:
-      - "docs/**"
+  workflow_run:
+    workflows:
+      - "Lint Code Base"
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -15,7 +14,7 @@ jobs:
   tests:
     environment: "Testing"
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
