@@ -1,0 +1,23 @@
+name: Build Image
+
+on:
+  workflow_run:
+    workflows: [ "Run Tests" ]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  build:
+    environment: ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag "note-app-demo-flask-api-backend-${GITHUB_REF}:$(date +%s)"
