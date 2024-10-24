@@ -26,14 +26,14 @@ jobs:
       - name: Build the Docker image
         run: |
           TAG="note-app-demo-flask-api-backend-${{ github.ref_name }}:$(date +%s)"
-          BUILD_ARGS="--build-arg FLASK_ENV=${{ secrets.FLASK_ENV }} --build-arg DEBUG=${{ secrets.DEBUG }} --file Dockerfile --tag $TAG"
+          BUILD_ARGS="--build-arg FLASK_ENV=${{ secrets.FLASK_ENV }} --build-arg DEBUG=${{ secrets.DEBUG }} --file Dockerfile --tag \"$TAG\""
 
           if [ "${{ github.ref_name }}" == "main" ]; then
-            BUILD_ARGS="$BUILD_ARGS --build-arg PROD_SECRET_KEY=${{ secrets.PROD_SECRET_KEY }} --build-arg PROD_DB_URI=${{ secrets.PROD_DB_URI }}"
+            BUILD_ARGS="$BUILD_ARGS --build-arg PROD_SECRET_KEY=\"${{ secrets.PROD_SECRET_KEY }}\" --build-arg PROD_DB_URI=\"${{ secrets.PROD_DB_URI }}\""
           elif [ "${{ github.ref_name }}" == "staging" ]; then
-            BUILD_ARGS="$BUILD_ARGS --build-arg STG_SECRET_KEY=${{ secrets.STG_SECRET_KEY }} --build-arg STG_DB_URI=${{ secrets.STG_DB_URI }}"
+            BUILD_ARGS="$BUILD_ARGS --build-arg STG_SECRET_KEY=\"${{ secrets.STG_SECRET_KEY }}\" --build-arg STG_DB_URI=\"${{ secrets.STG_DB_URI }}\""
           elif [ "${{ github.ref_name }}" == "development" ]; then
-            BUILD_ARGS="$BUILD_ARGS --build-arg DEV_SECRET_KEY=${{ secrets.DEV_SECRET_KEY }} --build-arg DEV_DB_URI=${{ secrets.DEV_DB_URI }}"
+            BUILD_ARGS="$BUILD_ARGS --build-arg DEV_SECRET_KEY=\"${{ secrets.DEV_SECRET_KEY }}\" --build-arg DEV_DB_URI=\"${{ secrets.DEV_DB_URI }}\""
           fi
 
           docker build . $BUILD_ARGS
