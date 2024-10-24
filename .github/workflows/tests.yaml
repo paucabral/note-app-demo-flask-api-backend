@@ -33,6 +33,7 @@ jobs:
       run: |
         pytest
       env:
+        FLASK_ENV: "test"
         TEST_DB_URI: ${{ secrets.TEST_DB_URI }}
         TEST_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
         TEST_USER: ${{ secrets.TEST_USER }}
