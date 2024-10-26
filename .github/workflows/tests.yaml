@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   tests:
-    environment: "testing"
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
 
     steps:

@@ -12,6 +12,8 @@ jobs:
   tests:
     needs: linter
     uses: ./.github/workflows/tests.yaml
+    with:
+      environment: testing
 
   build:
     needs: tests
