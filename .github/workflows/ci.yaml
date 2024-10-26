@@ -13,10 +13,10 @@ jobs:
     uses: ./.github/workflows/tests.yaml
     secrets:
       FLASK_ENV: ${{ secrets.TEST_FLASK_ENV }}
-      TEST_DB_URI: ${{ TEST_DB_URI }}
-      TEST_SECRET_KEY: ${{ TEST_SECRET_KEY }}
-      TEST_USER: ${{ TEST_USER }}
-      TEST_PASSWORD: ${{ TEST_PASSWORD }}
+      TEST_DB_URI: ${{ secrets.TEST_DB_URI }}
+      TEST_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+      TEST_USER: ${{ secrets.TEST_USER }}
+      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
   build-image:
     needs: [run-linter,run-tests]
