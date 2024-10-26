@@ -1,0 +1,22 @@
+name: CI Workflow
+
+on:
+  push:
+    branches-ignore:
+      - 'docs/**'
+
+jobs:
+  linter:
+    uses: ./.github/workflows/actions/linter.yaml
+
+  tests:
+    needs: linter
+    uses: ./.github/workflows/actions/tests.yaml
+
+  build:
+    needs: tests
+    uses: ./.github/workflows/actions/build.yaml
+
+  publish:
+    needs: build
+    uses: ./.github/workflows/actions/publish.yaml

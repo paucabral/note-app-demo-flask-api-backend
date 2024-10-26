@@ -1,21 +1,14 @@
 name: Publish Image
 
 on:
-  workflow_run:
-    workflows: [ "Build Image" ]
-    types:
-      - completed
-    branches:
-      - main
-      - staging
-      - development
+  workflow_call:
   workflow_dispatch:
 
 jobs:
   docker:
     environment: ${{ github.ref_name }}
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'staging' || github.ref_name == 'development' || github.event_name == 'workflow_dispatch' }}
 
     steps:
       - name: Checkout

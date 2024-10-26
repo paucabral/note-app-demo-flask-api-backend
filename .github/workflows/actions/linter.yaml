@@ -1,12 +1,12 @@
 name: Lint Code Base
 
 on:
-  push:
-    branches-ignore:
-      - "docs/**"
-  pull_request:
-    branches-ignore:
-      - "docs/**"
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+  workflow_dispatch:
 
 jobs:
   run-lint:

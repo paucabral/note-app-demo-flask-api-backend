@@ -1,10 +1,7 @@
 name: Run Tests
 
 on:
-  workflow_run:
-    workflows: [ "Lint Code Base" ]
-    types:
-      - completed
+  workflow_call:
   workflow_dispatch:
 
 permissions:
