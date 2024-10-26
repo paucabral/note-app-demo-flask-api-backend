@@ -34,9 +34,13 @@ jobs:
       
       - name: Debug Environment Variables
         env:
+          ENV: ${{ inputs.environment }}
           FLASK_ENV: ${{ secrets.FLASK_ENV }}
+          TEST_DB_URI: ${{ secrets.TEST_DB_URI }}
         run: |
+          echo "ENV: $ENV"
           echo "FLASK_ENV: $FLASK_ENV"
+          echo "FLASK_ENV: $TEST_DB_URI"
 
       - name: Test with pytest
         env:
