@@ -32,7 +32,7 @@ jobs:
           
         run: |
           docker build . \
-          --build-arg FLASK_ENV=$FLASK_ENV \
-          --build-arg DEBUG=$DEBUG \
-          --build-arg PORT=$PORT \
+          --build-arg FLASK_ENV="$FLASK_ENV" \
+          --build-arg DEBUG="$DEBUG" \
+          --build-arg PORT="$PORT" \
           --tag "note-app-demo-flask-api-backend-${GITHUB_REF#refs/*/}:$(date +%s)"
