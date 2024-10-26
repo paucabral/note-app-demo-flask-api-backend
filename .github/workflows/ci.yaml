@@ -7,17 +7,17 @@ on:
 
 jobs:
   run-linter:
-    uses: ./.github/workflows/linter.yaml
+    uses: ./.github/workflows/actions/linter.yaml
 
   run-tests:
-    uses: ./.github/workflows/tests.yaml
+    uses: ./.github/workflows/actions/tests.yaml
     with:
       environment: testing
 
   build-image:
     needs: [run-linter,run-tests]
-    uses: ./.github/workflows/build.yaml
+    uses: ./.github/workflows/actions/build.yaml
 
   publish-image:
     needs: build-image
-    uses: ./.github/workflows/publish.yaml
+    uses: ./.github/workflows/actions/publish.yaml
