@@ -7,6 +7,12 @@ on:
         required: true
       DOCKERHUB_TOKEN:
         required: true
+      FLASK_ENV:
+        required: true
+      DEBUG:
+        required: true
+      PORT:
+        required: true
   workflow_dispatch:
 
 jobs:

@@ -29,6 +29,9 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      FLASK_ENV: ${{ secrets.DEV_FLASK_ENV }}
+      DEBUG: ${{ secrets.NONPROD_DEBUG }}
+      PORT: ${{ secrets.FLASK_PORT }}
   
   publish-image-staging:
     needs: build-image
@@ -37,6 +40,9 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      FLASK_ENV: ${{ secrets.STG_FLASK_ENV }}
+      DEBUG: ${{ secrets.NONPROD_DEBUG }}
+      PORT: ${{ secrets.FLASK_PORT }}
 
   publish-image-prod:
     needs: build-image
@@ -45,3 +51,6 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      FLASK_ENV: ${{ secrets.PROD_FLASK_ENV }}
+      DEBUG: ${{ secrets.PROD_DEBUG }}
+      PORT: ${{ secrets.FLASK_PORT }}
