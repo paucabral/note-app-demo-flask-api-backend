@@ -8,15 +8,6 @@ on:
         default: testing
         required: true
         type: string
-    secrets:
-      FLASK_ENV:
-        required: true
-      TEST_DB_URI:
-        required: true
-      TEST_USER:
-        required: true
-      TEST_SECRET_KEY:
-        required: true
   workflow_dispatch:
 
 permissions:
@@ -41,6 +32,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      - name: Debug Environment Variables
+        env:
+          FLASK_ENV: ${{ secrets.FLASK_ENV }}
+        run: |
+          echo "FLASK_ENV: $FLASK_ENV"
 
       - name: Test with pytest
         env:
