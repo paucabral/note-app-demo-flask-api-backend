@@ -12,11 +12,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Set environment variables.
 ARG FLASK_ENV
-ENV FLASK_ENV $FLASK_ENV
+ENV FLASK_ENV=$FLASK_ENV
 ARG DEBUG
-ENV DEBUG $DEBUG
+ENV DEBUG=$DEBUG
 ARG PORT
-ENV PORT $PORT
+ENV PORT=$PORT
 
 # Copy the rest of your application code into the container at /app
 COPY . .
