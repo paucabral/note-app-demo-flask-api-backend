@@ -10,15 +10,15 @@ jobs:
     uses: ./.github/workflows/linter.yaml
 
   run-tests:
-    needs: linter
+    needs: run-linter
     uses: ./.github/workflows/tests.yaml
     with:
       environment: testing
 
   build-image:
-    needs: tests
+    needs: run-tests
     uses: ./.github/workflows/build.yaml
 
   publish-image:
-    needs: build
+    needs: build-image
     uses: ./.github/workflows/publish.yaml
