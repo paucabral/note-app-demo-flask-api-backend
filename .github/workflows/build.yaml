@@ -29,26 +29,7 @@ jobs:
           FLASK_ENV: ${{ secrets.FLASK_ENV }}
           DEBUG: ${{ secrets.DEBUG }}
           PORT: ${{ secrets.PORT }}
-          DEV_SECRET_KEY: ${{ secrets.DEV_SECRET_KEY }}
-          TEST_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
-          STG_SECRET_KEY: ${{ secrets.STG_SECRET_KEY }}
-          PROD_SECRET_KEY: ${{ secrets.PROD_SECRET_KEY }}
-          DEV_DB_URI: ${{ secrets.DEV_DB_URI }}
-          TEST_DB_URI: ${{ secrets.TEST_DB_URI }}
-          STG_DB_URI: ${{ secrets.STG_DB_URI }}
-          PROD_DB_URI: ${{ secrets.PROD_DB_URI }}
           
         run: docker build . \
-              --build-arg FLASK_ENV="$FLASK_ENV" \
-              --build-arg DEBUG="$DEBUG" \
-              --build-arg PORT="$PORT" \
-              --build-arg DEV_SECRET_KEY="$DEV_SECRET_KEY" \
-              --build-arg TEST_SECRET_KEY="$TEST_SECRET_KEY" \
-              --build-arg STG_SECRET_KEY="$STG_SECRET_KEY" \
-              --build-arg PROD_SECRET_KEY="$PROD_SECRET_KEY" \
-              --build-arg DEV_DB_URI="$DEV_DB_URI" \
-              --build-arg TEST_DB_URI="$TEST_DB_URI" \
-              --build-arg STG_DB_URI="$STG_DB_URI" \
-              --build-arg PROD_DB_URI="$PROD_DB_URI" \
               --file Dockerfile \
               --tag "note-app-demo-flask-api-backend-${GITHUB_REF#refs/*/}:$(date +%s)"
