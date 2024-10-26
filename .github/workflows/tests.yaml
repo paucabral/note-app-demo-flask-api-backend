@@ -8,6 +8,15 @@ on:
         default: testing
         required: true
         type: string
+    secrets:
+      FLASK_ENV:
+        required: true
+      TEST_DB_URI:
+        required: true
+      TEST_USER:
+        required: true
+      TEST_SECRET_KEY:
+        required: true
   workflow_dispatch:
 
 permissions:
