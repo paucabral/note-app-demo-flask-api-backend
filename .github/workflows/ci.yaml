@@ -7,16 +7,16 @@ on:
 
 jobs:
   linter:
-    uses: ./.github/workflows/actions/linter.yaml
+    uses: ./.github/workflows/linter.yaml
 
   tests:
     needs: linter
-    uses: ./.github/workflows/actions/tests.yaml
+    uses: ./.github/workflows/tests.yaml
 
   build:
     needs: tests
-    uses: ./.github/workflows/actions/build.yaml
+    uses: ./.github/workflows/build.yaml
 
   publish:
     needs: build
-    uses: ./.github/workflows/actions/publish.yaml
+    uses: ./.github/workflows/publish.yaml
