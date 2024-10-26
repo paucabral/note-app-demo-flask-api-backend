@@ -2,11 +2,17 @@ name: Run Tests
 
 on:
   workflow_call:
-    inputs:
-      environment:
-        description: "Testing environment passed from the caller workflow"
-        default: testing
-        type: string
+    secrets:
+      FLASK_ENV:
+        required: true
+      TEST_DB_URI:
+        required: true
+      TEST_SECRET_KEY:
+        required: true
+      TEST_USER:
+        required: true
+      TEST_PASSWORD:
+        required: true
   workflow_dispatch:
 
 permissions:
@@ -14,7 +20,6 @@ permissions:
 
 jobs:
   tests:
-    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
 
     steps:
@@ -31,16 +36,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      
-      - name: Debug Environment Variables
-        env:
-          ENV: ${{ inputs.environment }}
-          FLASK_ENV: ${{ secrets.FLASK_ENV }}
-          TEST_DB_URI: ${{ secrets.TEST_DB_URI }}
-        run: |
-          echo "ENV: $ENV"
-          echo "FLASK_ENV: $FLASK_ENV"
-          echo "FLASK_ENV: $TEST_DB_URI"
 
       - name: Test with pytest
         env:
