@@ -2,10 +2,6 @@ name: Lint Code Base
 
 on:
   workflow_call:
-    inputs:
-      branch:
-        required: true
-        type: string
   workflow_dispatch:
 
 jobs:
