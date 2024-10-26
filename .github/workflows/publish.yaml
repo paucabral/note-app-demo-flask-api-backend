@@ -13,7 +13,7 @@ on:
 
 jobs:
   docker:
-    environment: "shared"
+    environment: ${{ github.ref_name }}
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
@@ -39,3 +39,7 @@ jobs:
           context: .
           push: true
           tags: "${{ secrets.DOCKERHUB_USERNAME }}/note-app-demo-flask-api-backend:latest"
+          build-args: |
+            FLASK_ENV=${{ secrets.FLASK_ENV }}
+            DEBUG=${{ secrets.DEBUG }}
+            PORT=${{ secrets.PORT }}
