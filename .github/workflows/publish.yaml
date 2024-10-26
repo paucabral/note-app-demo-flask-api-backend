@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker:
+  publish:
     environment: ${{ github.ref_name }}
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'main' || github.ref_name == 'staging' || github.ref_name == 'development' || github.event_name == 'workflow_dispatch' }}

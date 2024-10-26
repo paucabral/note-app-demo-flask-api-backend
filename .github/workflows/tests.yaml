@@ -4,6 +4,8 @@ on:
   workflow_call:
     inputs:
       environment:
+        description: "Testing environment passed from the caller workflow"
+        default: testing
         required: true
         type: string
   workflow_dispatch:

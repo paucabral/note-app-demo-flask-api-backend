@@ -6,19 +6,19 @@ on:
       - 'docs/**'
 
 jobs:
-  linter:
+  run-linter:
     uses: ./.github/workflows/linter.yaml
 
-  tests:
+  run-tests:
     needs: linter
     uses: ./.github/workflows/tests.yaml
     with:
       environment: testing
 
-  build:
+  build-image:
     needs: tests
     uses: ./.github/workflows/build.yaml
 
-  publish:
+  publish-image:
     needs: build
     uses: ./.github/workflows/publish.yaml
