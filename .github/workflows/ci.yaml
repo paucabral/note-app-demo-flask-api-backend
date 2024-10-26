@@ -22,6 +22,26 @@ jobs:
     needs: [run-linter,run-tests]
     uses: ./.github/workflows/build.yaml
 
-  publish-image:
+  publish-image-dev:
     needs: build-image
     uses: ./.github/workflows/publish.yaml
+    if: ${{ github.ref_name == 'development' }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+  publish-image-staging:
+    needs: build-image
+    uses: ./.github/workflows/publish.yaml
+    if: ${{ github.ref_name == 'staging' }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  publish-image-prod:
+    needs: build-image
+    uses: ./.github/workflows/publish.yaml
+    if: ${{ github.ref_name == 'main' }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
