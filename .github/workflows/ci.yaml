@@ -10,13 +10,12 @@ jobs:
     uses: ./.github/workflows/linter.yaml
 
   run-tests:
-    needs: run-linter
     uses: ./.github/workflows/tests.yaml
     with:
       environment: testing
 
   build-image:
-    needs: run-tests
+    needs: [run-linter,run-tests]
     uses: ./.github/workflows/build.yaml
 
   publish-image:
