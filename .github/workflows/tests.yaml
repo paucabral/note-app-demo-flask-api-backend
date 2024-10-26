@@ -2,6 +2,10 @@ name: Run Tests
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
   workflow_dispatch:
 
 permissions:
