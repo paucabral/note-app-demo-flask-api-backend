@@ -30,6 +30,9 @@ jobs:
           DEBUG: ${{ secrets.DEBUG }}
           PORT: ${{ secrets.PORT }}
           
-        run: docker build . \
-              --file Dockerfile \
-              --tag "note-app-demo-flask-api-backend-${GITHUB_REF#refs/*/}:$(date +%s)"
+        run: |
+          docker build .\
+          --build-arg FLASK_ENV=$FLASK_ENV \
+          --build-arg DEBUG=$DEBUG \
+          --build-arg PORT=$PORT \
+          --tag "note-app-demo-flask-api-backend-${GITHUB_REF#refs/*/}:$(date +%s)"
